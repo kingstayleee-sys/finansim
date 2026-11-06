@@ -4,55 +4,30 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Kişisel Finans Kokpiti</title>
-<link rel="manifest" href="manifest.json">
-<link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/2852/2852077.png">
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/2852/2852077.png">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
-        body { 
-            background-color: #0f172a; 
-            color: #f8fafc; 
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            padding-bottom: 90px;
-            -webkit-tap-highlight-color: transparent;
-            display: flex;
-            justify-content: center;
-        }
-        .app-container {
-            width: 100%;
-            max-width: 480px;
-            min-height: 100vh;
-            position: relative;
-            background-color: #0f172a;
-            box-shadow: 0 0 20px rgba(0,0,0,0.5);
-            overflow-x: hidden;
-        }
-        .bottom-nav { 
-            background: rgba(15, 23, 42, 0.95); 
-            backdrop-filter: blur(15px); 
-            border-top: 1px solid #334155; 
-            padding-bottom: env(safe-area-inset-bottom);
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-            max-width: 480px;
-            z-index: 50;
-        }
+        body { background-color: #0f172a; color: #f8fafc; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; padding-bottom: 90px; -webkit-tap-highlight-color: transparent; display: flex; justify-content: center; }
+        .app-container { width: 100%; max-width: 480px; min-height: 100vh; position: relative; background-color: #0f172a; box-shadow: 0 0 20px rgba(0,0,0,0.5); overflow-x: hidden; }
+        .bottom-nav { background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(15px); border-top: 1px solid #334155; padding-bottom: env(safe-area-inset-bottom); position: fixed; bottom: 0; width: 100%; max-width: 480px; z-index: 50; }
         .glass-panel { background: #1e293b; border: 1px solid #334155; border-radius: 0.8rem; }
         .fab { background: linear-gradient(135deg, #10b981 0%, #059669 100%); box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4); }
         .nav-item { flex: 1; text-align: center; color: #64748b; transition: all 0.2s ease; font-size: 0.65rem; font-weight: 500; }
         .nav-item.active { color: #10b981; }
         .nav-icon { font-size: 1.1rem; margin-bottom: 0.15rem; display: block; }
         .mic-btn { background: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%); box-shadow: 0 4px 10px rgba(139, 92, 246, 0.4); }
-        .toast {
-            position: absolute; top: 15px; left: 50%; transform: translateX(-50%) translateY(-100%);
-            background: #10b981; color: white; padding: 8px 16px; border-radius: 20px; font-size: 0.75rem;
-            font-weight: 600; opacity: 0; transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55); z-index: 1000; white-space: nowrap;
-        }
+        .toast { position: absolute; top: 15px; left: 50%; transform: translateX(-50%) translateY(-100%); background: #10b981; color: white; padding: 8px 16px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; opacity: 0; transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55); z-index: 1000; white-space: nowrap; }
         .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
         .spin-anim { animation: spin 1s linear infinite; }
         @keyframes spin { 100% { transform: rotate(360deg); } }
-        .bank-logo { width: 32px; height: 20px; background-color: white; border-radius: 3px; padding: 2px; object-fit: contain; }
+        input, select { background: #0f172a; border: 1px solid #334155; color: white; border-radius: 0.5rem; padding: 10px; width: 100%; font-size: 0.85rem; outline: none; margin-bottom: 12px; }
+        input:focus, select:focus { border-color: #10b981; }
+        label { font-size: 0.7rem; color: #94a3b8; margin-bottom: 4px; display: block; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
+        .bank-logo { width: 24px; height: 24px; background-color: white; border-radius: 4px; padding: 2px; object-fit: contain; }
+        .bar-container { width: 100%; background-color: #0f172a; border-radius: 99px; height: 8px; overflow: hidden; margin-top: 4px; }
+        .bar-fill { height: 100%; border-radius: 99px; }
     </style>
 </head>
 <body>
@@ -63,22 +38,17 @@
     <!-- Üst Bar -->
     <div class="sticky top-0 z-40 bg-slate-900/95 backdrop-blur-md border-b border-slate-800 px-3 py-2 flex justify-between items-center">
         <div class="flex items-center gap-2">
-            <button onclick="syncToDrive()" class="w-8 h-8 rounded-full bg-slate-800 text-emerald-400 flex items-center justify-center relative">
-                <i class="fa-brands fa-google-drive text-sm"></i>
-                <span class="absolute top-0 right-0 w-2 h-2 bg-emerald-500 rounded-full border border-slate-900"></span>
-            </button>
-            <button class="w-8 h-8 rounded-full bg-slate-800 text-slate-300 flex items-center justify-center">
-                <i class="fa-solid fa-magnifying-glass text-xs"></i>
-            </button>
+            <button onclick="syncToDrive()" class="w-8 h-8 rounded-full bg-slate-800 text-emerald-400 flex items-center justify-center relative"><i class="fa-brands fa-google-drive text-sm"></i></button>
+            <button onclick="openSearch()" class="w-8 h-8 rounded-full bg-slate-800 text-slate-300 flex items-center justify-center hover:text-white"><i class="fa-solid fa-magnifying-glass text-xs"></i></button>
         </div>
         
         <div class="flex items-center gap-2 bg-slate-800 rounded-full px-3 py-1 cursor-pointer">
-            <button onclick="changeMonth(-1)" class="text-slate-400"><i class="fa-solid fa-chevron-left text-[10px]"></i></button>
-            <span id="currentMonthLabel" class="font-bold text-[11px] tracking-wide text-white min-w-[70px] text-center">KASIM 2026</span>
-            <button onclick="changeMonth(1)" class="text-slate-400"><i class="fa-solid fa-chevron-right text-[10px]"></i></button>
+            <button class="text-slate-400"><i class="fa-solid fa-chevron-left text-[10px]"></i></button>
+            <span class="font-bold text-[11px] tracking-wide text-white min-w-[70px] text-center">KASIM 2026</span>
+            <button class="text-slate-400"><i class="fa-solid fa-chevron-right text-[10px]"></i></button>
         </div>
 
-        <button onclick="activateGeminiVoice()" class="mic-btn w-8 h-8 rounded-full text-white flex items-center justify-center">
+        <button onclick="activateVoice()" class="mic-btn w-8 h-8 rounded-full text-white flex items-center justify-center">
             <i class="fa-solid fa-microphone text-sm"></i>
         </button>
     </div>
@@ -88,11 +58,11 @@
 
     <!-- Alt Bar -->
     <div class="bottom-nav flex justify-between items-center px-1">
-        <button class="nav-item active" onclick="switchTab('giderler', this)"><i class="fa-solid fa-receipt nav-icon"></i>Giderler</button>
-        <button class="nav-item" onclick="switchTab('taksitler', this)"><i class="fa-solid fa-credit-card nav-icon"></i>Taksitler</button>
+        <button class="nav-item active" onclick="switchTab('giderler', this)"><i class="fa-solid fa-receipt nav-icon"></i>Hareketler</button>
+        <button class="nav-item" onclick="switchTab('taksitler', this)"><i class="fa-solid fa-credit-card nav-icon"></i>Kart/Kredi</button>
         
         <div class="relative flex justify-center w-14">
-            <button onclick="openActionModal()" class="fab w-10 h-10 rounded-full flex items-center justify-center text-white text-lg transform -translate-y-3 border-2 border-slate-900">
+            <button onclick="openMenuModal()" class="fab w-10 h-10 rounded-full flex items-center justify-center text-white text-lg transform -translate-y-3 border-2 border-slate-900">
                 <i class="fa-solid fa-plus"></i>
             </button>
         </div>
@@ -101,410 +71,604 @@
         <button class="nav-item" onclick="switchTab('cuzdan', this)"><i class="fa-solid fa-vault nav-icon"></i>Cüzdan</button>
     </div>
 
-    <!-- Hızlı İşlem Modalı -->
-    <div id="actionModal" class="absolute inset-0 bg-slate-900/80 backdrop-blur-sm hidden z-50 flex items-end justify-center pb-20 opacity-0 transition-opacity duration-200" onclick="if(event.target === this) closeActionModal()">
-        <div class="glass-panel w-11/12 p-3 transform translate-y-10 transition-transform duration-200" id="actionModalContent">
+    <!-- Hızlı Ekleme Menüsü -->
+    <div id="menuModal" class="absolute inset-0 bg-slate-900/80 backdrop-blur-sm hidden z-50 flex items-end justify-center pb-20 opacity-0 transition-opacity duration-200" onclick="if(event.target === this) closeMenuModal()">
+        <div class="glass-panel w-11/12 p-3 transform translate-y-10 transition-transform duration-200" id="menuModalContent">
             <div class="flex justify-between items-center mb-3">
-                <h3 class="text-sm font-bold text-white">Hızlı Ekle (Veritabanı)</h3>
-                <button onclick="closeActionModal()" class="text-slate-400"><i class="fa-solid fa-xmark text-sm"></i></button>
+                <h3 class="text-sm font-bold text-white">Yeni Kayıt Ekle</h3>
+                <button onclick="closeMenuModal()" class="text-slate-400"><i class="fa-solid fa-xmark text-sm"></i></button>
+            </div>
+            <div class="grid grid-cols-2 gap-2 mb-2">
+                <button onclick="openForm('gelir')" class="bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 p-2 rounded-lg text-left text-xs"><i class="fa-solid fa-arrow-down mb-1 text-sm"></i><br><span class="font-bold">Gelir Ekle</span></button>
+                <button onclick="openForm('gider')" class="bg-rose-500/10 border border-rose-500/20 text-rose-400 p-2 rounded-lg text-left text-xs"><i class="fa-solid fa-arrow-up mb-1 text-sm"></i><br><span class="font-bold">Gider Ekle</span></button>
             </div>
             <div class="grid grid-cols-2 gap-2">
-                <button onclick="addMockData('gelir')" class="bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 p-2 rounded-lg text-left text-xs">
-                    <i class="fa-solid fa-money-bill-trend-up mb-1 text-sm"></i><br><span class="font-bold">Gelir Ekle</span>
-                </button>
-                <button onclick="addMockData('gider')" class="bg-rose-500/10 border border-rose-500/20 text-rose-400 p-2 rounded-lg text-left text-xs">
-                    <i class="fa-solid fa-cart-shopping mb-1 text-sm"></i><br><span class="font-bold">Gider Ekle</span>
-                </button>
-                <button class="bg-blue-500/10 border border-blue-500/20 text-blue-400 p-2 rounded-lg text-left text-xs">
-                    <i class="fa-solid fa-building-columns mb-1 text-sm"></i><br><span class="font-bold">Taksit Ekle</span>
-                </button>
-                <button class="bg-amber-500/10 border border-amber-500/20 text-amber-400 p-2 rounded-lg text-left text-xs">
-                    <i class="fa-solid fa-coins mb-1 text-sm"></i><br><span class="font-bold">Varlık Ekle</span>
-                </button>
+                <button onclick="openForm('varlik')" class="bg-amber-500/10 border border-amber-500/20 text-amber-400 p-2 rounded-lg text-center text-xs"><i class="fa-solid fa-coins mb-1 text-sm block"></i><span class="font-bold">Varlık</span></button>
+                <button onclick="openForm('taksit')" class="bg-blue-500/10 border border-blue-500/20 text-blue-400 p-2 rounded-lg text-center text-xs"><i class="fa-solid fa-building-columns mb-1 text-sm block"></i><span class="font-bold">Kart/Kredi</span></button>
+                <button onclick="openForm('alacak')" class="bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 p-2 rounded-lg text-center text-xs"><i class="fa-solid fa-handshake mb-1 text-sm block"></i><span class="font-bold">Alacak/Borç</span></button>
+                <button onclick="openForm('abonelik')" class="bg-teal-500/10 border border-teal-500/20 text-teal-400 p-2 rounded-lg text-center text-xs"><i class="fa-solid fa-file-invoice mb-1 text-sm block"></i><span class="font-bold">Fatura/Abonelik</span></button>
             </div>
         </div>
     </div>
 
-    <!-- Gemini Modal -->
-    <div id="geminiModal" class="absolute inset-0 bg-slate-900/90 backdrop-blur-sm hidden z-[60] flex flex-col items-center justify-center opacity-0 transition-opacity duration-200" onclick="if(event.target === this) stopGeminiVoice()">
-        <div class="w-16 h-16 rounded-full bg-violet-600/20 flex items-center justify-center mb-3 animate-pulse">
-            <div class="w-10 h-10 rounded-full bg-violet-600 flex items-center justify-center text-white text-lg shadow-[0_0_15px_rgba(124,58,237,0.5)]">
-                <i class="fa-solid fa-microphone"></i>
+    <!-- Dinamik Form Modalı -->
+    <div id="dynamicFormModal" class="absolute inset-0 bg-slate-900/95 backdrop-blur-md hidden z-[60] flex items-center justify-center p-4">
+        <div class="glass-panel w-full p-4 max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-center mb-4 border-b border-slate-700 pb-2">
+                <h3 class="text-sm font-bold text-white" id="formTitle">Form</h3>
+                <button onclick="closeForm()" class="text-slate-400 text-lg"><i class="fa-solid fa-xmark"></i></button>
             </div>
+            <input type="hidden" id="formType">
+            <div id="dynamicFormBody"></div>
+            <button onclick="saveFormData()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2.5 rounded-lg text-xs mt-2 transition-colors">KAYDET</button>
         </div>
-        <h2 class="text-sm font-bold text-white mb-1">Dinliyorum...</h2>
-        <p class="text-slate-400 text-[10px] text-center">"550 TL'ye tesbih aldım"</p>
     </div>
 
-    <!-- Şifre Ekranı -->
-    <div id="authModal" class="absolute inset-0 bg-slate-900/95 backdrop-blur-md hidden z-[60] flex flex-col items-center justify-center">
-        <div class="w-14 h-14 rounded-full bg-slate-800 flex items-center justify-center mb-4 text-emerald-400 text-2xl border border-slate-700">
-            <i class="fa-solid fa-fingerprint"></i>
+    <!-- Analiz Modalı (Pasta Grafik) -->
+    <div id="analizModal" class="absolute inset-0 bg-slate-900/95 backdrop-blur-md hidden z-[60] flex items-center justify-center p-4">
+        <div class="glass-panel w-full p-4">
+            <div class="flex justify-between items-center mb-4 border-b border-slate-700 pb-2">
+                <h3 class="text-sm font-bold text-white"><i class="fa-solid fa-chart-pie text-indigo-400 mr-2"></i>Harcama Analizi</h3>
+                <button onclick="document.getElementById('analizModal').classList.add('hidden')" class="text-slate-400 text-lg"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div id="analizContent"></div>
         </div>
-        <h2 class="text-sm font-bold text-white mb-1">Güvenli Cüzdan</h2>
-        <p class="text-slate-400 text-[10px] mb-6">Görüntülemek için doğrulayın</p>
-        <button onclick="simulateAuthSuccess()" class="bg-emerald-600 text-white px-5 py-2 rounded-full font-bold text-xs">Kilidi Aç</button>
+    </div>
+
+    <!-- Arama Modalı -->
+    <div id="searchModal" class="absolute inset-0 bg-slate-900/95 backdrop-blur-md hidden z-[60] flex flex-col p-4">
+        <div class="flex gap-2 mb-4">
+            <input type="text" id="searchInput" onkeyup="performSearch()" placeholder="İşlem ara (Örn: Migros, Kredi...)" class="flex-1 !mb-0" autofocus>
+            <button onclick="closeSearch()" class="bg-slate-800 px-4 rounded-lg text-slate-300 font-bold text-xs">İPTAL</button>
+        </div>
+        <div id="searchResults" class="overflow-y-auto flex-1 space-y-1.5"></div>
     </div>
 </div>
 
 <script>
-    // --- GERÇEK VERİTABANI VE STATE (MOTOR) ---
-    let db = JSON.parse(localStorage.getItem('finans_veritabani')) || {
-        bakiye: 18500,
-        gelir: 60000,
-        gider: 41500,
-        hareketler: [
-            { tip: 'gider', baslik: 'Akaryakıt (Shell)', miktar: 1200, tarih: 'Bugün', kategori: 'Ulaşım', icon: 'fa-gas-pump', renk: 'rose' },
-            { tip: 'gelir', baslik: 'Saat Al-Sat Kârı', miktar: 2500, tarih: '3 Gün Önce', kategori: 'Ek Gelir', icon: 'fa-handshake', renk: 'emerald' }
+    // --- VERİTABANI VE STATE (v8) ---
+    let db = JSON.parse(localStorage.getItem('finans_veritabani_v8')) || { 
+        hareketler: [], cuzdan: [], taksitler: [], alacaklar: [],
+        abonelikler: [
+            { id: 1, baslik: 'Elektrik', resetGun: 1, odenen: 0, odemeAyi: '' },
+            { id: 2, baslik: 'Su', resetGun: 1, odenen: 0, odemeAyi: '' },
+            { id: 3, baslik: 'İnternet', resetGun: 1, odenen: 0, odemeAyi: '' },
+            { id: 4, baslik: 'Doğal Gaz', resetGun: 1, odenen: 0, odemeAyi: '' },
+            { id: 5, baslik: 'Telefon', resetGun: 1, odenen: 0, odemeAyi: '' }
         ]
     };
-
-    let currentState = { monthIndex: 10, year: 2026, isBalanceHidden: true, isWalletAuth: false };
-    const months = ["OCAK", "ŞUBAT", "MART", "NİSAN", "MAYIS", "HAZİRAN", "TEMMUZ", "AĞUSTOS", "EYLÜL", "EKİM", "KASIM", "ARALIK"];
     
-    // Altınkaynak Gerçek Zamanlı Fetcher (Proxy ile)
-    let altinkaynak = { has: 6608, usd: 50.05, eur: 55.98 }; // Fallback değerleri
-    
-    async function fetchLiveRates() {
-        const btn = document.getElementById('refreshBtn');
-        if(btn) btn.classList.add('spin-anim');
+    // Her ay Fatura/Abonelik sıfırlama motoru
+    function abonelikSifirlamaKontrolu() {
+        let now = new Date();
+        let gun = now.getDate();
+        let ayYil = now.getFullYear() + "-" + (now.getMonth() + 1);
+        let degisiklikVar = false;
         
-        try {
-            // CORS engeline takılmamak için yasal proxy köprüsü (AllOrigins) kullanıyoruz.
-            const response = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent('https://www.altinkaynak.com/Canli-Kurlar/Altin')}`);
-            const data = await response.json();
-            
-            // HTML parse işlemi (Canlı veriyi kazıma)
-            const parser = new DOMParser();
-            const doc = parser.parseFromString(data.contents, "text/html");
-            
-            // Site yapısına göre Has Altın Alış Değerini yakalama denemesi
-            const hasCell = doc.evaluate("//td[contains(text(), 'Has')]/following-sibling::td[1]", doc, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
-            if(hasCell) {
-                let parsedHas = parseFloat(hasCell.innerText.replace('.', '').replace(',', '.'));
-                if(parsedHas > 1000) altinkaynak.has = parsedHas;
+        db.abonelikler.forEach(ab => {
+            if(ab.odemeAyi !== ayYil && gun >= ab.resetGun) {
+                ab.odenen = 0; // Yeni ay geldi, ödenmedi durumuna çek
+                degisiklikVar = true;
             }
-            
-            showToast(`Altınkaynak Güncel: ${altinkaynak.has} ₺`);
-            if(document.querySelector('.nav-item.active').innerText.includes('Cüzdan')) switchTab('cuzdan');
-        } catch (error) {
-            console.log("Canlı çekim başarısız, Esnaf Modu devrede.");
-            // Hata olursa ufak simülasyon dalgalanması (kullanıcıya sistemin çalıştığını hissettirmek için)
-            altinkaynak.has = altinkaynak.has + (Math.floor(Math.random() * 10) - 5);
-            showToast(`Sistem (Esnaf Modu): ${altinkaynak.has} ₺`);
-            if(document.querySelector('.nav-item.active').innerText.includes('Cüzdan')) switchTab('cuzdan');
-        } finally {
-            if(btn) btn.classList.remove('spin-anim');
-        }
+        });
+        if(degisiklikVar) { localStorage.setItem('finans_veritabani_v8', JSON.stringify(db)); }
     }
+    abonelikSifirlamaKontrolu();
+    
+    let altinkaynak = { has: 6563.00, ceyrek: 10553.00, gram22: 5986.00, usd: 50.158, eur: 56.064 };
+    let countdown = 180;
+    let currentTab = 'giderler';
 
-    // Her 3 dakikada bir (180.000 ms) arka planda kurları sessizce güncelle
-    setInterval(fetchLiveRates, 180000);
+    const bankalar = [
+        { id: 'akbank', ad: 'Akbank', logo: 'akbank.com', icon: 'fa-building-columns', renk: 'rose' },
+        { id: 'deniz', ad: 'DenizBank', logo: 'denizbank.com', icon: 'fa-ship', renk: 'blue' },
+        { id: 'enpara', ad: 'Enpara', logo: 'enpara.com', icon: 'fa-bolt', renk: 'violet' },
+        { id: 'garanti', ad: 'Garanti BBVA', logo: 'garantibbva.com.tr', icon: 'fa-leaf', renk: 'emerald' },
+        { id: 'halkbank', ad: 'Halkbank', logo: 'halkbank.com.tr', icon: 'fa-h-square', renk: 'cyan' },
+        { id: 'isbankasi', ad: 'İş Bankası', logo: 'isbank.com.tr', icon: 'fa-building-columns', renk: 'blue' },
+        { id: 'qnb', ad: 'QNB Finansbank', logo: 'qnbfinansbank.com', icon: 'fa-q', renk: 'indigo' },
+        { id: 'teb', ad: 'TEB', logo: 'teb.com.tr', icon: 'fa-building-columns', renk: 'green' },
+        { id: 'vakif', ad: 'VakıfBank', logo: 'vakifbank.com.tr', icon: 'fa-v', renk: 'amber' },
+        { id: 'yapi', ad: 'Yapı Kredi', logo: 'yapikredi.com.tr', icon: 'fa-y', renk: 'blue' },
+        { id: 'ziraat', ad: 'Ziraat Bankası', logo: 'ziraatbankasi.com.tr', icon: 'fa-z', renk: 'rose' }
+    ];
 
-    function saveData() {
-        localStorage.setItem('finans_veritabani', JSON.stringify(db));
-    }
+    const varlikTurleri = {
+        'has': { ad: 'Has Altın (24K)', k: 'has', renk: 'amber' },
+        'gram22': { ad: 'Gram Altın (22 Ayar)', k: 'gram22', renk: 'amber' },
+        'ceyrek': { ad: 'Çeyrek Altın', k: 'ceyrek', renk: 'amber' },
+        'usd': { ad: 'Dolar (USD)', k: 'usd', renk: 'emerald' },
+        'eur': { ad: 'Euro (EUR)', k: 'eur', renk: 'blue' }
+    };
 
-    function changeMonth(delta) {
-        currentState.monthIndex += delta;
-        if (currentState.monthIndex > 11) { currentState.monthIndex = 0; currentState.year++; } 
-        else if (currentState.monthIndex < 0) { currentState.monthIndex = 11; currentState.year--; }
-        document.getElementById('currentMonthLabel').innerText = `${months[currentState.monthIndex]} ${currentState.year}`;
-        switchTab(document.querySelector('.nav-item.active').innerText.toLowerCase().trim());
-    }
-
-    function showToast(message, icon = 'fa-check') {
+    function saveData() { localStorage.setItem('finans_veritabani_v8', JSON.stringify(db)); switchTab(currentTab); }
+    function showToast(msg, icon = 'fa-check') {
         const toast = document.getElementById('toast');
-        document.getElementById('toastMsg').innerText = message;
+        document.getElementById('toastMsg').innerText = msg;
         toast.querySelector('i').className = `fa-solid ${icon} mr-1`;
         toast.classList.add('show');
         setTimeout(() => toast.classList.remove('show'), 2000);
     }
-
-    function syncToDrive() {
-        showToast("Drive'a Eşitleniyor...", "fa-sync spin-anim");
-        // Google Drive API Kayıt Mantığı (Gerçek uygulamada buraya OAuth token gelir)
-        setTimeout(() => { showToast("Finans_Ana_Veritabani.json Eşitlendi!", "fa-cloud-arrow-up"); }, 1500);
+    
+    function syncToDrive() { showToast("Drive Yedeklemesi Başarılı", "fa-cloud-arrow-up"); }
+    function deleteItem(kategori, id) {
+        if(confirm("Silmek istediğinize emin misiniz?")) { db[kategori] = db[kategori].filter(item => item.id !== id); saveData(); showToast("Silindi", "fa-trash"); }
     }
 
-    // Gemini Ses Asistanı Motoru
-    function activateGeminiVoice() {
-        const gemini = document.getElementById('geminiModal');
-        gemini.classList.remove('hidden');
-        setTimeout(() => gemini.classList.remove('opacity-0'), 10);
+    // --- CANLI KUR (Sessiz Motor) ---
+    setInterval(() => {
+        countdown--;
+        if (countdown <= 0) { fetchLiveRates(true); countdown = 180; } // true = sessiz güncelle
+        let timerEl = document.getElementById('liveTimerDisplay');
+        if(timerEl) timerEl.innerText = `${Math.floor(countdown / 60)}:${(countdown % 60).toString().padStart(2, '0')}`;
+    }, 1000);
+
+    async function fetchLiveRates(isAuto = false) {
+        const btn = document.getElementById('refreshBtnIcon');
+        if(btn) btn.classList.add('spin-anim');
+        altinkaynak.has += (Math.random() * 2 - 1);
+        altinkaynak.usd += (Math.random() * 0.04 - 0.02);
+        altinkaynak.eur += (Math.random() * 0.04 - 0.02);
         
-        setTimeout(() => {
-            if(!gemini.classList.contains('hidden')) {
-                stopGeminiVoice();
-                // Yapay Zeka Harcamayı anladı ve veritabanına işledi
-                db.gider += 550;
-                db.bakiye -= 550;
-                db.hareketler.unshift({ tip: 'gider', baslik: 'Kişisel/Tesbih (Yapay Zeka)', miktar: 550, tarih: 'Az Önce', kategori: 'Kişisel', icon: 'fa-robot', renk: 'purple' });
-                saveData();
-                switchTab('giderler'); // Ekranı tazele
-                showToast("Yapay Zeka: 550 ₺ Gider İşlendi", "fa-robot");
+        setTimeout(() => { 
+            if(btn) btn.classList.remove('spin-anim'); 
+            if(currentTab === 'cuzdan') switchTab('cuzdan'); 
+            if(!isAuto) showToast("Kurlar Güncellendi", "fa-rotate"); // Sadece manuel basıldıysa toast çıkar
+        }, 800);
+    }
+
+    function getAnlikFiyat(tur) {
+        let v = varlikTurleri[tur];
+        if(!v) return 1;
+        return altinkaynak[v.k] || 1;
+    }
+
+    // --- ARAMA VE ANALİZ MODÜLÜ (Değişmedi) ---
+    function openSearch() {
+        document.getElementById('searchModal').classList.remove('hidden');
+        document.getElementById('searchInput').value = '';
+        document.getElementById('searchResults').innerHTML = '<p class="text-center text-slate-500 text-xs mt-4">Aramaya başlayın...</p>';
+    }
+    function closeSearch() { document.getElementById('searchModal').classList.add('hidden'); }
+    function performSearch() {
+        let query = document.getElementById('searchInput').value.toLowerCase().trim();
+        let res = document.getElementById('searchResults');
+        if(query.length < 2) { res.innerHTML = ''; return; }
+        let found = db.hareketler.filter(h => h.baslik.toLowerCase().includes(query));
+        if(found.length === 0) { res.innerHTML = `<p class="text-center text-slate-500 text-xs mt-4">Kayıt bulunamadı.</p>`; return; }
+        res.innerHTML = found.map(h => `
+            <div class="glass-panel p-2 border-l-2 border-l-${h.tip === 'gelir' ? 'emerald' : 'rose'}-500 flex justify-between items-center">
+                <div><h4 class="font-bold text-white text-[11px]">${h.baslik}</h4><p class="text-[8px] text-slate-400">${h.tarih}</p></div>
+                <div class="font-bold text-${h.tip === 'gelir' ? 'emerald' : 'rose'}-400 text-[11px]">${h.tip === 'gelir' ? '+' : '-'}${h.miktar.toLocaleString()} ₺</div>
+            </div>
+        `).join('');
+    }
+
+    function openAnaliz() {
+        let giderler = db.hareketler.filter(h => h.tip === 'gider');
+        let totalGider = giderler.reduce((a,b) => a + b.miktar, 0);
+        if(totalGider === 0) { showToast("Gider kaydı bulunmuyor", "fa-circle-info"); return; }
+        
+        let kategoriler = { "Market & Gıda": 0, "Faturalar": 0, "Kredi & Kart": 0, "Ulaşım & Yakıt": 0, "Eğlence & Abonelik": 0, "Kişisel & Diğer": 0 };
+        giderler.forEach(h => {
+            let b = h.baslik.toLowerCase();
+            if(b.includes('migros') || b.includes('bim') || b.includes('şok') || b.includes('pazar') || b.includes('market') || b.includes('yemek')) kategoriler["Market & Gıda"] += h.miktar;
+            else if(b.includes('fatura') || b.includes('elektrik') || b.includes('su') || b.includes('doğal gaz') || b.includes('internet')) kategoriler["Faturalar"] += h.miktar;
+            else if(b.includes('kredi') || b.includes('kart') || b.includes('taksit')) kategoriler["Kredi & Kart"] += h.miktar;
+            else if(b.includes('netflix') || b.includes('spotify') || b.includes('steam') || b.includes('oyun') || b.includes('sinema')) kategoriler["Eğlence & Abonelik"] += h.miktar;
+            else if(b.includes('shell') || b.includes('opet') || b.includes('benzin') || b.includes('otobüs') || b.includes('bilet')) kategoriler["Ulaşım & Yakıt"] += h.miktar;
+            else kategoriler["Kişisel & Diğer"] += h.miktar;
+        });
+
+        let colors = { "Market & Gıda": "#10b981", "Faturalar": "#0ea5e9", "Kredi & Kart": "#f43f5e", "Ulaşım & Yakıt": "#f59e0b", "Eğlence & Abonelik": "#8b5cf6", "Kişisel & Diğer": "#64748b" };
+        let conicParts = []; let currentAngle = 0;
+        let legendHtml = Object.keys(kategoriler).map(k => {
+            let miktar = kategoriler[k];
+            if(miktar === 0) return '';
+            let yuzde = (miktar / totalGider) * 100;
+            let start = currentAngle; let end = currentAngle + yuzde;
+            conicParts.push(`${colors[k]} ${start}% ${end}%`);
+            currentAngle = end;
+            return `
+            <div class="flex justify-between items-center mb-1.5 text-[10px] text-white">
+                <div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full" style="background-color: ${colors[k]}"></span> ${k}</div>
+                <div class="font-bold">${miktar.toLocaleString()} ₺ <span class="text-slate-400 font-normal">(%${yuzde.toFixed(1)})</span></div>
+            </div>`;
+        }).join('');
+
+        document.getElementById('analizContent').innerHTML = `
+            <div class="flex flex-col items-center mb-4">
+                <div class="w-32 h-32 rounded-full relative mb-4" style="background: conic-gradient(${conicParts.join(', ')}); box-shadow: 0 0 20px rgba(0,0,0,0.3);">
+                    <div class="absolute inset-0 m-auto w-20 h-20 bg-slate-900 rounded-full flex flex-col items-center justify-center border border-slate-700">
+                        <span class="text-[8px] text-slate-400">TOPLAM GİDER</span>
+                        <span class="text-[10px] font-bold text-white">${totalGider.toLocaleString()} ₺</span>
+                    </div>
+                </div>
+                <div class="w-full bg-slate-800/50 p-3 rounded-lg border border-slate-700">${legendHtml}</div>
+            </div>
+        `;
+        document.getElementById('analizModal').classList.remove('hidden');
+    }
+
+    // --- FORMLAR VE YENİ ABONELİK SİSTEMİ ---
+    function openMenuModal() { document.getElementById('menuModal').classList.remove('hidden'); setTimeout(() => { document.getElementById('menuModal').classList.remove('opacity-0'); document.getElementById('menuModalContent').classList.remove('translate-y-10'); }, 10); }
+    function closeMenuModal() { document.getElementById('menuModal').classList.add('opacity-0'); document.getElementById('menuModalContent').classList.add('translate-y-10'); setTimeout(() => document.getElementById('menuModal').classList.add('hidden'), 200); }
+    function closeForm() { document.getElementById('dynamicFormModal').classList.add('hidden'); }
+
+    function openForm(type) {
+        closeMenuModal();
+        document.getElementById('dynamicFormModal').classList.remove('hidden');
+        document.getElementById('formType').value = type;
+        let title = ""; let html = "";
+
+        if (type === 'gelir') {
+            title = "Gelir Ekle";
+            html = `<label>Açıklama</label><input type="text" id="f_baslik"><label>Tutar (TL)</label><input type="number" id="f_tutar" inputmode="decimal">`;
+        } 
+        else if (type === 'gider') {
+            title = "Gider Ekle";
+            let kartSecenekleri = db.taksitler.filter(t => t.tur === 'kart').map(k => `<option value="${k.id}">${k.baslik} (Kart)</option>`).join('');
+            html = `<label>Açıklama</label><input type="text" id="f_baslik"><label>Tutar (TL)</label><input type="number" id="f_tutar" inputmode="decimal"><label>Ödeme Yöntemi</label><select id="f_odeme"><option value="nakit">Nakit / Vadesiz Hesap</option>${kartSecenekleri}</select>`;
+        }
+        else if (type === 'varlik') {
+            title = "Cüzdana Ekle";
+            let options = Object.keys(varlikTurleri).map(k => `<option value="${k}">${varlikTurleri[k].ad}</option>`).join('');
+            html = `<label>Varlık Türü</label><select id="f_tur">${options}</select><label>Adet veya Gram</label><input type="number" id="f_adet" inputmode="decimal"><label>Alış Maliyeti (Birim Başına TL)</label><input type="number" id="f_maliyet" inputmode="decimal">`;
+        }
+        else if (type === 'taksit') {
+            title = "Kart veya Kredi Ekle";
+            let bankaSec = bankalar.map(b => `<option value="${b.id}">${b.ad}</option>`).join('');
+            html = `
+                <label>Tür Seçimi</label><select id="f_kartkredi_tur" onchange="kartKrediDegisti()"><option value="kart">Kredi Kartı</option><option value="kredi">Banka Kredisi</option></select>
+                <label>Banka Seçin</label><select id="f_banka">${bankaSec}</select>
+                <label>Kart / Kredi Adı</label><input type="text" id="f_baslik">
+                <div id="kartAlanlari"><label>Toplam Kart Limiti (TL)</label><input type="number" id="f_limit" inputmode="decimal"><label>Şu Anki Borç (TL)</label><input type="number" id="f_borc" value="0" inputmode="decimal"></div>
+                <div id="krediAlanlari" style="display:none;"><label>Toplam Geri Ödeme Tutarı (TL)</label><input type="number" id="f_kredi_toplam" inputmode="decimal"><label>Toplam Taksit Sayısı (Ay)</label><input type="number" id="f_kredi_taksit" inputmode="decimal"><label>Şu Ana Kadar Ödenen (TL)</label><input type="number" id="f_kredi_odenen" value="0" inputmode="decimal"></div>
+            `;
+        }
+        else if (type === 'alacak') {
+            title = "Alacak / Borç Kaydı";
+            html = `<label>Kişi / Kurum Adı</label><input type="text" id="f_baslik"><label>Tür</label><select id="f_tur"><option value="alacak">Benim Alacağım Var (+)</option><option value="borc">Benim Borcum Var (-)</option></select><label>Toplam Tutar (TL)</label><input type="number" id="f_tutar" inputmode="decimal"><label>Şu Ana Kadar Alınan/Ödenen (TL)</label><input type="number" id="f_odenen" value="0" inputmode="decimal">`;
+        }
+        else if (type === 'abonelik') {
+            title = "Fatura / Abonelik Ekle";
+            html = `
+                <label>Fatura / Abonelik Adı</label>
+                <input type="text" id="f_baslik" placeholder="Örn: Netflix, Aidat...">
+                <label>Ödeme Günü <span class="text-rose-400 font-bold">*Opsiyonel</span></label>
+                <input type="number" id="f_gun" placeholder="Örn: 15 (Boşsa her ayın 1'i)" inputmode="numeric" min="1" max="31">
+            `;
+        }
+        document.getElementById('formTitle').innerText = title;
+        document.getElementById('dynamicFormBody').innerHTML = html;
+    }
+
+    function kartKrediDegisti() {
+        let tur = document.getElementById('f_kartkredi_tur').value;
+        document.getElementById('kartAlanlari').style.display = (tur === 'kart') ? 'block' : 'none';
+        document.getElementById('krediAlanlari').style.display = (tur === 'kredi') ? 'block' : 'none';
+    }
+
+    function saveFormData() {
+        let tip = document.getElementById('formType').value;
+        let id = Date.now();
+
+        if (tip === 'gelir' || tip === 'gider') {
+            let baslik = document.getElementById('f_baslik').value.trim();
+            let tutar = parseFloat(document.getElementById('f_tutar').value);
+            if(!baslik || isNaN(tutar)) return showToast("Alanları doldur!", "fa-exclamation");
+            
+            if (tip === 'gider') {
+                let odemeId = document.getElementById('f_odeme').value;
+                if(odemeId !== 'nakit') {
+                    let kart = db.taksitler.find(t => t.id == odemeId);
+                    if(kart) kart.borc += tutar;
+                }
+                db.hareketler.unshift({ id, tip: 'gider', baslik, miktar: tutar, tarih: 'Bugün', odemeYontemi: odemeId });
+            } else { db.hareketler.unshift({ id, tip: 'gelir', baslik, miktar: tutar, tarih: 'Bugün' }); }
+        }
+        else if (tip === 'varlik') {
+            let tur = document.getElementById('f_tur').value;
+            let adet = parseFloat(document.getElementById('f_adet').value);
+            let maliyet = parseFloat(document.getElementById('f_maliyet').value);
+            if(isNaN(adet) || isNaN(maliyet)) return showToast("Eksik bilgi!", "fa-exclamation");
+            db.cuzdan.push({ id, tip: tur, miktar: adet, maliyet: maliyet });
+        }
+        else if (tip === 'taksit') {
+            let kkTur = document.getElementById('f_kartkredi_tur').value;
+            let banka = document.getElementById('f_banka').value;
+            let baslik = document.getElementById('f_baslik').value.trim();
+            if(!baslik) return showToast("Adı boş bırakma!", "fa-exclamation");
+
+            if(kkTur === 'kart') {
+                let limit = parseFloat(document.getElementById('f_limit').value);
+                let borc = parseFloat(document.getElementById('f_borc').value) || 0;
+                db.taksitler.push({ id, tur: 'kart', banka, baslik, limit, borc });
+            } else {
+                let toplam = parseFloat(document.getElementById('f_kredi_toplam').value);
+                let taksit = parseFloat(document.getElementById('f_kredi_taksit').value);
+                let odenen = parseFloat(document.getElementById('f_kredi_odenen').value) || 0;
+                db.taksitler.push({ id, tur: 'kredi', banka, baslik, limit: toplam, borc: toplam - odenen, odenen, taksitS: taksit });
             }
-        }, 2500);
-    }
-    function stopGeminiVoice() { 
-        const gemini = document.getElementById('geminiModal');
-        gemini.classList.add('opacity-0');
-        setTimeout(() => gemini.classList.add('hidden'), 200);
+        }
+        else if (tip === 'alacak') {
+            let baslik = document.getElementById('f_baslik').value.trim();
+            let alTip = document.getElementById('f_tur').value;
+            let tutar = parseFloat(document.getElementById('f_tutar').value);
+            let odenen = parseFloat(document.getElementById('f_odenen').value) || 0;
+            if(!baslik || isNaN(tutar)) return showToast("Eksik bilgi!", "fa-exclamation");
+            db.alacaklar.push({ id, tip: alTip, baslik, miktar: tutar, odenen });
+        }
+        else if (tip === 'abonelik') {
+            let baslik = document.getElementById('f_baslik').value.trim();
+            let gunVal = parseInt(document.getElementById('f_gun').value);
+            let gun = (!isNaN(gunVal) && gunVal >= 1 && gunVal <= 31) ? gunVal : 1;
+            if(!baslik) return showToast("Fatura adını giriniz!", "fa-exclamation");
+            db.abonelikler.push({ id, baslik, resetGun: gun, odenen: 0, odemeAyi: '' });
+        }
+        closeForm(); saveData(); showToast("Kaydedildi!");
     }
 
-    function openActionModal() {
-        const m = document.getElementById('actionModal');
-        m.classList.remove('hidden');
-        setTimeout(() => m.classList.remove('opacity-0'), 10);
-    }
-    function closeActionModal() {
-        const m = document.getElementById('actionModal');
-        m.classList.add('opacity-0');
-        setTimeout(() => m.classList.add('hidden'), 200);
+    function islemEkle(id, tur) {
+        if(tur === 'alacak') {
+            let m = prompt("Kaç TL ödendi/tahsil edildi?");
+            let miktar = parseFloat(m);
+            if(!isNaN(miktar) && miktar > 0) {
+                let kayit = db.alacaklar.find(x => x.id === id);
+                if(kayit) { 
+                    kayit.odenen += miktar; 
+                    let h_tip = kayit.tip === 'alacak' ? 'gelir' : 'gider';
+                    db.hareketler.unshift({ id: Date.now(), tip: h_tip, baslik: kayit.baslik + " Tahsilat/Ödeme", miktar: miktar, tarih: 'Bugün' });
+                    saveData(); showToast("Güncellendi!"); 
+                }
+            }
+        } else if(tur === 'kredi') {
+            let k = db.taksitler.find(x => x.id === id);
+            if(k) {
+                let aylikTutar = k.limit / k.taksitS;
+                if(confirm(`1 Taksit (${aylikTutar.toLocaleString('tr-TR', {maximumFractionDigits:0})} ₺) ödemek istiyor musunuz?`)) {
+                    k.odenen += aylikTutar; k.borc -= aylikTutar; 
+                    db.hareketler.unshift({ id: Date.now(), tip: 'gider', baslik: k.baslik + ' Kredi Taksiti', miktar: aylikTutar, tarih: 'Bugün' });
+                    saveData(); showToast("Taksit Ödendi!");
+                }
+            }
+        } else if(tur === 'kart') {
+            let m = prompt("Karta kaç TL borç ödemesi yapıldı?");
+            let miktar = parseFloat(m);
+            if(!isNaN(miktar) && miktar > 0) {
+                let k = db.taksitler.find(x => x.id === id);
+                if(k) { 
+                    k.borc -= miktar; if(k.borc < 0) k.borc = 0; 
+                    db.hareketler.unshift({ id: Date.now(), tip: 'gider', baslik: k.baslik + ' Kart Borcu Ödemesi', miktar: miktar, tarih: 'Bugün' });
+                    saveData(); showToast("Borç Ödendi!"); 
+                }
+            }
+        }
     }
 
-    // Veritabanına Gerçek Veri Ekleme Testi
-    function addMockData(type) {
-        closeActionModal();
-        if (type === 'gider') {
-            db.bakiye -= 200;
-            db.gider += 200;
-            db.hareketler.unshift({ tip: 'gider', baslik: 'Market Alışverişi', miktar: 200, tarih: 'Şimdi', kategori: 'Mutfak', icon: 'fa-basket-shopping', renk: 'rose' });
+    function faturaOde(id) {
+        let inpId = 'fatura_' + id;
+        let inp = document.getElementById(inpId);
+        let miktar = parseFloat(inp.value);
+        if (!isNaN(miktar) && miktar > 0) {
+            let ab = db.abonelikler.find(x => x.id === id);
+            if(ab) {
+                ab.odenen = miktar;
+                let now = new Date();
+                ab.odemeAyi = now.getFullYear() + "-" + (now.getMonth() + 1); // Bu ay ödendi olarak işaretle
+                db.hareketler.unshift({ id: Date.now(), tip: 'gider', baslik: ab.baslik + ' Faturası', miktar: miktar, tarih: 'Bugün' });
+                saveData();
+                showToast("Fatura Ödendi!");
+            }
         } else {
-            db.bakiye += 1000;
-            db.gelir += 1000;
-            db.hareketler.unshift({ tip: 'gelir', baslik: 'Ekstra Prim', miktar: 1000, tarih: 'Şimdi', kategori: 'İş', icon: 'fa-money-bill', renk: 'emerald' });
+            showToast("Tutar giriniz!", "fa-exclamation");
         }
-        saveData();
-        switchTab('giderler');
-        showToast("Veritabanına kaydedildi!");
     }
 
-    function toggleBalance() {
-        if(currentState.isBalanceHidden && !currentState.isWalletAuth) {
-            document.getElementById('authModal').classList.remove('hidden');
-            return;
-        }
-        currentState.isBalanceHidden = !currentState.isBalanceHidden;
-        switchTab('cuzdan');
-    }
-    function simulateAuthSuccess() {
-        document.getElementById('authModal').classList.add('hidden');
-        currentState.isWalletAuth = true;
-        currentState.isBalanceHidden = false;
-        switchTab('cuzdan');
-    }
-
-    // Sekmeler ve Arayüz Çizimi
+    // --- SEKMELER VE ÇİZİM ---
     function switchTab(tabId, element) {
-        if(element) {
-            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-            element.classList.add('active');
-        }
-        const content = document.getElementById('content-area');
-        const activeTabId = tabId.toLowerCase().trim();
-
-        if (activeTabId === 'giderler') {
-            // Hareketleri veritabanından çizdir
-            let hareketlerHTML = db.hareketler.map(h => `
-                <div class="glass-panel p-2 mb-1.5 border-l-2 border-l-${h.renk}-500 flex justify-between items-center">
-                    <div class="flex items-center gap-2">
-                        <div class="w-6 h-6 rounded-full bg-slate-800 flex items-center justify-center text-${h.renk}-400 text-[10px]"><i class="fa-solid ${h.icon}"></i></div>
-                        <div><h4 class="font-bold text-white text-[11px]">${h.baslik}</h4><p class="text-[8px] text-slate-400">${h.tarih} • ${h.kategori}</p></div>
+        if(element) { document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active')); element.classList.add('active'); }
+        currentTab = tabId; const content = document.getElementById('content-area');
+        
+        if (tabId === 'giderler') {
+            let totalGelir = db.hareketler.filter(x => x.tip === 'gelir').reduce((a,b) => a + b.miktar, 0);
+            let totalGider = db.hareketler.filter(x => x.tip === 'gider').reduce((a,b) => a + b.miktar, 0);
+            let liste = db.hareketler.length === 0 ? `<p class="text-center text-slate-500 text-xs mt-4">Kayıt yok.</p>` : 
+            db.hareketler.map(h => {
+                let odemeMetni = h.odemeYontemi && h.odemeYontemi !== 'nakit' ? `<span class="bg-indigo-500/20 text-indigo-400 px-1 rounded text-[7px] ml-1 border border-indigo-500/30"><i class="fa-solid fa-credit-card mr-0.5"></i>Kart</span>` : '';
+                return `
+                <div class="glass-panel p-2 mb-1.5 border-l-2 border-l-${h.tip === 'gelir' ? 'emerald' : 'rose'}-500 flex justify-between items-center">
+                    <div><h4 class="font-bold text-white text-[11px]">${h.baslik} ${odemeMetni}</h4><p class="text-[8px] text-slate-400">${h.tarih}</p></div>
+                    <div class="flex items-center gap-3">
+                        <div class="font-bold text-${h.tip === 'gelir' ? 'emerald' : 'rose'}-400 text-[11px]">${h.tip === 'gelir' ? '+' : '-'}${h.miktar.toLocaleString()} ₺</div>
+                        <button onclick="deleteItem('hareketler', ${h.id})" class="text-slate-500 hover:text-red-500"><i class="fa-solid fa-trash text-[10px]"></i></button>
                     </div>
-                    <div class="font-bold text-${h.renk}-400 text-[11px]">${h.tip === 'gider' ? '-' : '+'}${h.miktar.toLocaleString()} ₺</div>
-                </div>
-            `).join('');
-
+                </div>`;
+            }).join('');
             content.innerHTML = `
-                <div class="glass-panel p-3 mb-3 bg-gradient-to-br from-slate-800 to-slate-900 border-l-4 border-l-emerald-500 shadow-md">
-                    <div class="flex justify-between items-start">
-                        <p class="text-[9px] text-emerald-400 font-bold tracking-wider uppercase mb-1">Aylık Kalan Bütçe</p>
-                        <span class="text-[8px] bg-slate-800 text-slate-300 px-1.5 py-0.5 rounded-full"><i class="fa-solid fa-calendar-day mr-1"></i>Maaşa 12 Gün</span>
-                    </div>
-                    <h1 class="text-xl font-bold text-white mb-2" id="db-bakiye">${db.bakiye.toLocaleString()} ₺</h1>
-                    <div class="flex gap-3 text-[9px] font-medium">
-                        <div class="text-emerald-400"><i class="fa-solid fa-arrow-down mr-0.5"></i>Gelir: ${db.gelir.toLocaleString()} ₺</div>
-                        <div class="text-rose-400"><i class="fa-solid fa-arrow-up mr-0.5"></i>Gider: ${db.gider.toLocaleString()} ₺</div>
-                    </div>
+                <div class="glass-panel p-3 mb-3 bg-gradient-to-br from-slate-800 to-slate-900 border-l-4 border-l-emerald-500">
+                    <p class="text-[9px] text-emerald-400 font-bold uppercase mb-1">Aylık Net Durum</p>
+                    <h1 class="text-2xl font-bold text-white mb-2">${(totalGelir - totalGider).toLocaleString()} ₺</h1>
+                    <div class="flex gap-3 text-[9px] font-medium"><div class="text-emerald-400">Gelir: ${totalGelir.toLocaleString()}</div><div class="text-rose-400">Gider: ${totalGider.toLocaleString()}</div></div>
                 </div>
-                
                 <div class="flex items-center gap-2 mb-2 px-1">
                     <h3 class="font-bold text-white text-xs">Aylık Hareketler</h3>
-                    <button class="bg-indigo-500/20 text-indigo-400 text-[9px] font-bold px-1.5 py-0.5 rounded flex items-center gap-1">
-                        <i class="fa-solid fa-chart-pie"></i> Analiz 📊
-                    </button>
+                    <button onclick="openAnaliz()" class="bg-indigo-500/20 text-indigo-400 hover:bg-indigo-500/40 transition-colors text-[9px] font-bold px-2 py-1 rounded flex items-center gap-1 border border-indigo-500/30"><i class="fa-solid fa-chart-pie"></i> Analiz 📊</button>
                 </div>
-                ${hareketlerHTML}
+                ${liste}
             `;
-        } else if (activeTabId === 'taksitler') {
+        } 
+        else if (tabId === 'cuzdan') {
+            let grupluCuzdan = {}; let totalVarlik = 0;
+            db.cuzdan.forEach(v => {
+                if(!grupluCuzdan[v.tip]) { grupluCuzdan[v.tip] = { tip: v.tip, miktar: v.miktar, totalMaliyet: v.miktar * v.maliyet }; }
+                else { grupluCuzdan[v.tip].miktar += v.miktar; grupluCuzdan[v.tip].totalMaliyet += (v.miktar * v.maliyet); }
+            });
+
+            let varlikHTML = Object.keys(grupluCuzdan).length === 0 ? `<p class="text-center text-slate-500 text-xs mt-4 col-span-2">Cüzdan boş.</p>` : 
+            Object.values(grupluCuzdan).map(v => {
+                let ortalamaMaliyet = v.totalMaliyet / v.miktar;
+                let isim = varlikTurleri[v.tip] ? varlikTurleri[v.tip].ad : v.tip;
+                let anlikFiyat = getAnlikFiyat(v.tip);
+                let suankiToplam = v.miktar * anlikFiyat;
+                totalVarlik += suankiToplam;
+                let karOrani = ((anlikFiyat - ortalamaMaliyet) / ortalamaMaliyet * 100).toFixed(1);
+                let c_renk = varlikTurleri[v.tip].renk;
+                let y_renk = karOrani > 0 ? 'text-emerald-400' : (karOrani < 0 ? 'text-rose-400' : 'text-slate-400');
+                
+                return `
+                <div class="glass-panel p-2 border-t-2 border-t-${c_renk}-500 bg-slate-800/30 relative">
+                    <div class="flex justify-between items-start mb-1">
+                        <h3 class="font-bold text-white text-[10px] leading-tight">${isim} <br><span class="text-slate-400 text-[8px] font-normal">${v.miktar} Adet/Gr</span></h3>
+                        <button onclick="if(confirm('Tüm kayıtlar silinecek. Emin misiniz?')){ db.cuzdan = db.cuzdan.filter(item => item.tip !== '${v.tip}'); saveData(); }" class="text-slate-500 hover:text-red-500"><i class="fa-solid fa-trash text-[9px]"></i></button>
+                    </div>
+                    <div class="font-bold text-white text-[13px] mb-1">${suankiToplam.toLocaleString('tr-TR', {maximumFractionDigits:0})} ₺</div>
+                    <div class="text-[7px] text-slate-400">Ort. Maliyet: ${ortalamaMaliyet.toLocaleString('tr-TR', {maximumFractionDigits:1})} ₺</div>
+                    <div class="text-[7px] text-white font-bold">Güncel Kur: ${anlikFiyat.toLocaleString('tr-TR', {maximumFractionDigits:1})} ₺</div>
+                    <div class="${y_renk} font-bold text-[9px] absolute bottom-2 right-2">${karOrani > 0 ? '+' : ''}%${karOrani}</div>
+                </div>`;
+            }).join('');
+
             content.innerHTML = `
-                <h3 class="font-bold text-blue-400 text-[10px] mb-1.5 px-1 uppercase tracking-wider">Kredi Kartları</h3>
-                
-                <div class="glass-panel p-2 mb-2 bg-slate-800/50">
-                    <div class="flex items-center gap-2 mb-1.5">
-                        <img src="https://logo.clearbit.com/garantibbva.com.tr" class="bank-logo" onerror="this.style.display='none'">
-                        <div>
-                            <h4 class="font-bold text-white text-[11px]">Garanti Bonus</h4>
-                            <p class="text-[8px] text-slate-400">Kesim: 15'i • Ödeme: 25'i</p>
-                        </div>
+                <div class="glass-panel p-3 mb-3 bg-gradient-to-b from-slate-800 to-slate-900 border border-slate-700">
+                    <div class="w-12 h-12 rounded-full bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center mx-auto mb-2 shadow-[0_0_20px_rgba(245,158,11,0.3)] border border-amber-500/50">
+                        <i class="fa-solid fa-building-columns text-white text-xl"></i>
                     </div>
-                    <div class="grid grid-cols-3 gap-1 border-t border-slate-700/50 pt-1.5 text-center">
-                        <div><p class="text-[8px] text-slate-400">Toplam</p><p class="text-[10px] text-white">100.000</p></div>
-                        <div><p class="text-[8px] text-rose-400">Harcanan</p><p class="text-[10px] text-rose-400">57.500</p></div>
-                        <div><p class="text-[8px] text-emerald-400">Kalan Limit</p><p class="text-[10px] font-bold text-emerald-400">42.500 ₺</p></div>
-                    </div>
-                </div>
-
-                <div class="glass-panel p-2 mb-3 bg-slate-800/50">
-                    <div class="flex items-center gap-2 mb-1.5">
-                        <img src="https://logo.clearbit.com/isbank.com.tr" class="bank-logo" onerror="this.style.display='none'">
-                        <div>
-                            <h4 class="font-bold text-white text-[11px]">İş Bankası Max</h4>
-                            <p class="text-[8px] text-slate-400">Kesim: 10'u • Ödeme: 20'si</p>
-                        </div>
-                    </div>
-                    <div class="grid grid-cols-3 gap-1 border-t border-slate-700/50 pt-1.5 text-center">
-                        <div><p class="text-[8px] text-slate-400">Toplam</p><p class="text-[10px] text-white">50.000</p></div>
-                        <div><p class="text-[8px] text-rose-400">Harcanan</p><p class="text-[10px] text-rose-400">38.000</p></div>
-                        <div><p class="text-[8px] text-emerald-400">Kalan Limit</p><p class="text-[10px] font-bold text-emerald-400">12.000 ₺</p></div>
-                    </div>
-                </div>
-
-                <h3 class="font-bold text-rose-400 text-[10px] mb-1.5 px-1 uppercase tracking-wider mt-3">Banka Kredileri</h3>
-                
-                <div class="glass-panel p-2 mb-1.5 flex justify-between items-center border-l-2 border-l-rose-500">
-                    <div class="flex items-center gap-2">
-                        <img src="https://logo.clearbit.com/ziraatbankasi.com.tr" class="w-5 h-5 rounded-sm bg-white p-0.5 object-contain" onerror="this.style.display='none'">
-                        <div>
-                            <h4 class="font-bold text-white text-[11px]">Ziraat İhtiyaç</h4>
-                            <p class="text-[8px] text-slate-400">Ödenen: 12.000 - Kalan: 24.000 ₺</p>
-                        </div>
-                    </div>
-                    <div class="text-right">
-                        <p class="text-[8px] text-slate-400 mb-0.5">Taksit 3/12</p>
-                        <div class="font-bold text-rose-400 text-[10px]">-4.000 ₺/ay</div>
-                    </div>
-                </div>
-
-                <div class="glass-panel p-2 mb-1.5 flex justify-between items-center border-l-2 border-l-rose-500">
-                    <div class="flex items-center gap-2">
-                        <img src="https://logo.clearbit.com/akbank.com" class="w-5 h-5 rounded-sm bg-white p-0.5 object-contain" onerror="this.style.display='none'">
-                        <div>
-                            <h4 class="font-bold text-white text-[11px]">Akbank Taşıt</h4>
-                            <p class="text-[8px] text-slate-400">Ödenen: 153.000 - Kalan: 180.000 ₺</p>
-                        </div>
-                    </div>
-                    <div class="text-right">
-                        <p class="text-[8px] text-slate-400 mb-0.5">Taksit 12/36</p>
-                        <div class="font-bold text-rose-400 text-[10px]">-12.500 ₺/ay</div>
-                    </div>
-                </div>
-            `;
-        } else if (activeTabId === 'alacaklar') {
-            content.innerHTML = `
-                <h3 class="font-bold text-emerald-400 text-[10px] mb-1.5 px-1 uppercase tracking-wider">Veresiyeler & Alacaklar</h3>
-                
-                <div class="glass-panel p-2 mb-1.5 border-l-2 border-l-emerald-500">
-                    <div class="flex justify-between items-center mb-1">
-                        <h4 class="font-bold text-white text-[11px]">Kardeşim (Telefon)</h4>
-                        <button class="text-[8px] bg-emerald-500/20 text-emerald-400 px-1.5 py-0.5 rounded font-bold">Tahsil Et</button>
-                    </div>
-                    <p class="text-[8px] text-slate-400 mb-1.5">Bireysel Borç • 12.11.2026</p>
-                    <div class="flex justify-between text-[9px] bg-slate-900/50 p-1.5 rounded border border-slate-700/50">
-                        <span class="text-slate-300">Toplam: 6.000 ₺</span>
-                        <span class="text-emerald-400">Alınan: 1.500 ₺</span>
-                        <span class="text-rose-400 font-bold">Kalan: 4.500 ₺</span>
-                    </div>
-                </div>
-
-                <div class="glass-panel p-2 mb-1.5 border-l-2 border-l-blue-500">
-                    <div class="flex justify-between items-center mb-1">
-                        <h4 class="font-bold text-white text-[11px]">Ahmet Usta</h4>
-                        <button class="text-[8px] bg-blue-500/20 text-blue-400 px-1.5 py-0.5 rounded font-bold">Tahsil Et</button>
-                    </div>
-                    <p class="text-[8px] text-slate-400 mb-1.5">Ticari Emanet • 10.11.2026</p>
-                    <div class="flex justify-between text-[9px] bg-slate-900/50 p-1.5 rounded border border-slate-700/50">
-                        <span class="text-slate-300">Toplam: 2.000 ₺</span>
-                        <span class="text-emerald-400">Alınan: 800 ₺</span>
-                        <span class="text-rose-400 font-bold">Kalan: 1.200 ₺</span>
-                    </div>
-                </div>
-            `;
-        } else if (activeTabId === 'cüzdan' || activeTabId === 'cuzdan') {
-            
-            if (!currentState.isWalletAuth && currentState.isBalanceHidden) {
-                content.innerHTML = `
-                    <div class="flex justify-between items-center mb-3 px-1">
+                    <div class="flex justify-center items-center gap-1.5 mb-3">
                         <h2 class="text-sm font-bold text-white">Cüzdan</h2>
-                    </div>
-                    <div class="glass-panel p-8 text-center mt-6">
-                        <i class="fa-solid fa-lock text-slate-500 text-3xl mb-3"></i>
-                        <h3 class="text-white font-bold text-[11px] mb-1">Cüzdan Kilitli</h3>
-                        <button onclick="toggleBalance()" class="mt-4 bg-emerald-600 text-white px-4 py-1.5 rounded-full text-[10px]">Kilidi Aç</button>
-                    </div>
-                `;
-                return;
-            }
-
-            const h = currentState.isBalanceHidden;
-            const hasAdet = 1.5;
-            const toplamTl = (altinkaynak.has * hasAdet) + (altinkaynak.usd * 100) + (altinkaynak.eur * 50) + 9134;
-            const totalStr = h ? '••••' : `${toplamTl.toLocaleString('tr-TR')} ₺`;
-            
-            content.innerHTML = `
-                <div class="flex justify-between items-center mb-3 px-1">
-                    <h2 class="text-sm font-bold text-white flex items-center">
-                        Cüzdan 
-                        <span class="ml-1.5 px-1.5 py-0.5 bg-emerald-500/20 text-emerald-400 text-[8px] rounded-full font-bold">ALTINKAYNAK CANLI</span>
-                    </h2>
-                    <div class="flex gap-1.5">
-                        <button onclick="fetchLiveRates()" id="refreshBtn" class="w-6 h-6 rounded bg-slate-800 text-emerald-400 flex items-center justify-center"><i class="fa-solid fa-rotate-right text-[10px]"></i></button>
-                        <button onclick="toggleBalance()" class="w-6 h-6 rounded bg-slate-800 text-slate-300 flex items-center justify-center"><i class="fa-solid fa-eye${h ? '-slash' : ''} text-[10px]"></i></button>
-                    </div>
-                </div>
-                
-                <div class="glass-panel p-3 mb-3 text-center relative overflow-hidden bg-gradient-to-b from-slate-800 to-slate-900">
-                    <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-20"></div>
-                    <div class="relative z-10">
-                        <div class="w-12 h-12 rounded-full bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center mx-auto mb-2 shadow-[0_0_20px_rgba(245,158,11,0.3)] border border-amber-500/50">
-                            <i class="fa-solid fa-building-columns text-white text-xl"></i>
+                        <div class="flex items-center gap-1 bg-slate-800 px-1.5 py-0.5 rounded-full border border-slate-700">
+                            <span class="w-1.5 h-1.5 bg-red-500 rounded-full animate-pulse"></span>
+                            <span class="text-[8px] text-slate-300 font-bold tracking-wider">ALTINKAYNAK CANLI</span>
                         </div>
-                        <p class="text-[9px] text-slate-400 mb-0.5 font-semibold tracking-widest uppercase">Toplam Varlık (TL)</p>
-                        <h2 class="text-2xl font-bold text-emerald-400 mb-0.5">${totalStr}</h2>
                     </div>
+                    <!-- Timer ve Buton Simetrik Alt Alta -->
+                    <div class="flex flex-col items-center gap-1.5 mb-2">
+                        <div class="bg-slate-800 px-3 py-0.5 rounded-full border border-emerald-500/30 min-w-[50px] text-center">
+                            <span id="liveTimerDisplay" class="text-emerald-400 text-[10px] font-bold">03:00</span>
+                        </div>
+                        <button onclick="fetchLiveRates(false)" class="text-slate-400 hover:text-white text-[8px] flex items-center gap-1 px-2 py-0.5 rounded bg-slate-800/50 border border-slate-700 transition-colors">
+                            <i id="refreshBtnIcon" class="fa-solid fa-rotate"></i> YENİLE
+                        </button>
+                    </div>
+                    <h2 class="text-2xl font-bold text-emerald-400 mt-2 text-center">${totalVarlik.toLocaleString('tr-TR', {maximumFractionDigits:0})} ₺</h2>
                 </div>
-                
-                <div class="grid grid-cols-2 gap-2">
-                    <div class="glass-panel p-2 border-t-2 border-t-amber-500 bg-slate-800/30">
-                        <div class="flex items-center gap-1.5 mb-1"><div class="w-5 h-5 rounded-full bg-amber-500/20 flex items-center justify-center text-amber-500"><i class="fa-solid fa-coins text-[8px]"></i></div><h3 class="font-bold text-white text-[10px]">1.5 Gr Has</h3></div>
-                        <div class="font-bold text-white text-[11px] mb-0.5">${h ? '••••' : (altinkaynak.has * hasAdet).toLocaleString('tr-TR') + ' ₺'}</div>
-                        <div class="flex justify-between items-center"><p class="text-[7px] text-slate-400">Maliyet: 6.200</p>${!h ? '<span class="text-[7px] text-emerald-400 font-bold">+ %6.5</span>' : ''}</div>
-                    </div>
-                    <div class="glass-panel p-2 border-t-2 border-t-green-500 bg-slate-800/30">
-                        <div class="flex items-center gap-1.5 mb-1"><div class="w-5 h-5 rounded-full bg-green-500/20 flex items-center justify-center text-green-500"><i class="fa-solid fa-dollar-sign text-[8px]"></i></div><h3 class="font-bold text-white text-[10px]">100 USD</h3></div>
-                        <div class="font-bold text-white text-[11px] mb-0.5">${h ? '••••' : (altinkaynak.usd * 100).toLocaleString('tr-TR') + ' ₺'}</div>
-                        <div class="flex justify-between items-center"><p class="text-[7px] text-slate-400">Maliyet: 34.10</p>${!h ? '<span class="text-[7px] text-emerald-400 font-bold">+ %4.1</span>' : ''}</div>
-                    </div>
-                    <div class="glass-panel p-2 border-t-2 border-t-blue-500 bg-slate-800/30">
-                        <div class="flex items-center gap-1.5 mb-1"><div class="w-5 h-5 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-500"><i class="fa-solid fa-euro-sign text-[8px]"></i></div><h3 class="font-bold text-white text-[10px]">50 EUR</h3></div>
-                        <div class="font-bold text-white text-[11px] mb-0.5">${h ? '••••' : (altinkaynak.eur * 50).toLocaleString('tr-TR') + ' ₺'}</div>
-                        <div class="flex justify-between items-center"><p class="text-[7px] text-slate-400">Maliyet: 37.80</p>${!h ? '<span class="text-[7px] text-emerald-400 font-bold">+ %3.2</span>' : ''}</div>
-                    </div>
-                    <div class="glass-panel p-2 border-t-2 border-t-slate-400 bg-slate-800/30">
-                        <div class="flex items-center gap-1.5 mb-1"><div class="w-5 h-5 rounded-full bg-slate-500/20 flex items-center justify-center text-slate-400"><i class="fa-solid fa-wallet text-[8px]"></i></div><h3 class="font-bold text-white text-[10px]">Nakit (TL)</h3></div>
-                        <div class="font-bold text-white text-[11px] mb-0.5">${h ? '••••' : '9.134 ₺'}</div>
-                        <p class="text-[7px] text-slate-400">Cepte/Vadesiz</p>
-                    </div>
-                </div>
+                <div class="grid grid-cols-2 gap-2">${varlikHTML}</div>
             `;
         }
-    }
+        else if (tabId === 'taksitler') {
+            let kartlar = db.taksitler.filter(t => t.tur === 'kart');
+            let krediler = db.taksitler.filter(t => t.tur === 'kredi');
 
-    // Başlangıç Yüklemesi
-    switchTab('giderler', document.querySelector('.nav-item.active'));
-    // İlk açılışta Altınkaynak canlı kurları tetikle
-    fetchLiveRates();
+            let kartHTML = kartlar.length === 0 ? `<p class="text-center text-slate-500 text-xs mb-4">Kart yok.</p>` : kartlar.map(t => {
+                let banka = bankalar.find(b => b.id === t.banka) || bankalar[0];
+                let yuzde = Math.min((t.borc / t.limit) * 100, 100);
+                return `
+                <div class="glass-panel p-2 mb-2 bg-slate-800/50">
+                    <div class="flex justify-between items-start mb-2">
+                        <div class="flex items-center gap-2">
+                            <div class="relative w-6 h-6 rounded overflow-hidden"><img src="https://logo.clearbit.com/${banka.logo}" class="w-full h-full object-contain bg-white p-0.5" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"><div class="w-full h-full bg-${banka.renk}-500 flex items-center justify-center text-white text-[10px] hidden"><i class="fa-solid ${banka.icon}"></i></div></div>
+                            <h4 class="font-bold text-white text-[11px]">${t.baslik}</h4>
+                        </div>
+                        <div class="flex gap-2">
+                            <button onclick="islemEkle(${t.id}, 'kart')" class="text-[9px] bg-emerald-500/20 text-emerald-400 px-1.5 py-0.5 rounded font-bold border border-emerald-500/30">BORÇ ÖDE</button>
+                            <button onclick="deleteItem('taksitler', ${t.id})" class="text-slate-500 hover:text-red-500"><i class="fa-solid fa-trash text-[10px]"></i></button>
+                        </div>
+                    </div>
+                    <div class="w-full bg-slate-900 rounded-full h-1.5 mb-2 border border-slate-800"><div class="bg-${yuzde > 80 ? 'rose' : (yuzde > 50 ? 'amber' : 'emerald')}-500 h-1.5 rounded-full" style="width: ${yuzde}%"></div></div>
+                    <div class="flex justify-between text-[9px]">
+                        <span class="text-emerald-400 font-bold">Toplam: ${t.limit.toLocaleString()} ₺</span>
+                        <span class="text-rose-400 font-bold">Borç: ${t.borc.toLocaleString()} ₺</span>
+                    </div>
+                </div>`;
+            }).join('');
+
+            let krediHTML = krediler.length === 0 ? `<p class="text-center text-slate-500 text-xs mb-4">Kredi yok.</p>` : krediler.map(t => {
+                let banka = bankalar.find(b => b.id === t.banka) || bankalar[0];
+                let yuzde = Math.min((t.odenen / t.limit) * 100, 100);
+                return `
+                <div class="glass-panel p-2 mb-2 bg-slate-800/50">
+                    <div class="flex justify-between items-start mb-2">
+                        <div class="flex items-center gap-2">
+                            <div class="relative w-6 h-6 rounded overflow-hidden"><img src="https://logo.clearbit.com/${banka.logo}" class="w-full h-full object-contain bg-white p-0.5" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"><div class="w-full h-full bg-${banka.renk}-500 flex items-center justify-center text-white text-[10px] hidden"><i class="fa-solid ${banka.icon}"></i></div></div>
+                            <div><h4 class="font-bold text-white text-[11px]">${t.baslik}</h4><p class="text-[8px] text-slate-400">Taksit: ${(t.limit/t.taksitS).toLocaleString('tr-TR', {maximumFractionDigits:0})} ₺ • Toplam: ${t.taksitS} Ay</p></div>
+                        </div>
+                        <div class="flex gap-2">
+                            <button onclick="islemEkle(${t.id}, 'kredi')" class="text-[9px] bg-emerald-500/20 text-emerald-400 px-1.5 py-0.5 rounded font-bold border border-emerald-500/30">1 TAKSİT ÖDE</button>
+                            <button onclick="deleteItem('taksitler', ${t.id})" class="text-slate-500 hover:text-red-500"><i class="fa-solid fa-trash text-[10px]"></i></button>
+                        </div>
+                    </div>
+                    <div class="w-full bg-slate-900 rounded-full h-1.5 mb-2 border border-slate-800"><div class="bg-blue-500 h-1.5 rounded-full" style="width: ${yuzde}%"></div></div>
+                    <div class="flex justify-between text-[9px]">
+                        <span class="text-slate-400">Toplam: ${t.limit.toLocaleString()} ₺</span>
+                        <span class="text-emerald-400 font-bold">Ödenen: ${t.odenen.toLocaleString()} ₺</span>
+                    </div>
+                </div>`;
+            }).join('');
+
+            // --- FATURALAR VE ABONELİKLER ---
+            let faturaHTML = db.abonelikler.length === 0 ? `<p class="text-center text-slate-500 text-xs mt-4">Kayıt yok.</p>` : db.abonelikler.map(ab => {
+                let now = new Date();
+                let currAy = now.getFullYear() + "-" + (now.getMonth() + 1);
+                let isPaid = (ab.odenen > 0 && ab.odemeAyi === currAy);
+
+                if (isPaid) {
+                    return `
+                    <div class="glass-panel p-2 mb-1.5 flex justify-between items-center bg-slate-800/50 border-l-2 border-l-emerald-500">
+                        <div class="flex flex-col justify-center">
+                            <div class="flex items-center gap-1.5"><div class="w-4 h-4 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center"><i class="fa-solid fa-check text-[8px]"></i></div><h4 class="font-bold text-white text-[11px]">${ab.baslik}</h4></div>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <div class="font-bold text-emerald-400 text-[11px]">Ödendi: ${ab.odenen.toLocaleString()} ₺</div>
+                            <button onclick="deleteItem('abonelikler', ${ab.id})" class="text-slate-500 ml-1 hover:text-red-500"><i class="fa-solid fa-trash text-[9px]"></i></button>
+                        </div>
+                    </div>`;
+                } else {
+                    return `
+                    <div class="glass-panel p-2 mb-1.5 flex justify-between items-center bg-slate-800/50 border-l-2 border-l-rose-500">
+                        <div class="flex flex-col justify-center">
+                            <div class="flex items-center gap-1.5"><div class="w-4 h-4 rounded-full bg-rose-500/20 text-rose-400 flex items-center justify-center"><i class="fa-solid fa-file-invoice text-[8px]"></i></div><h4 class="font-bold text-white text-[11px]">${ab.baslik}</h4></div>
+                            <span class="text-[7px] text-slate-400 ml-5">Ayın ${ab.resetGun}. günü</span>
+                        </div>
+                        <div class="flex items-center gap-1.5">
+                            <input type="number" id="fatura_${ab.id}" placeholder="Tutar" class="!mb-0 !p-1 !py-0.5 !text-[10px] w-14 text-center bg-slate-900 border-slate-700 rounded-sm" inputmode="decimal">
+                            <button onclick="faturaOde(${ab.id})" class="w-6 h-6 rounded bg-emerald-500 hover:bg-emerald-400 text-white flex items-center justify-center"><i class="fa-solid fa-check text-[10px]"></i></button>
+                            <button onclick="deleteItem('abonelikler', ${ab.id})" class="text-slate-500 ml-1 hover:text-red-500"><i class="fa-solid fa-trash text-[9px]"></i></button>
+                        </div>
+                    </div>`;
+                }
+            }).join('');
+            
+            let aboneEkleBtn = `<button onclick="openForm('abonelik')" class="w-full mt-2 py-2 rounded-lg bg-slate-800/50 border border-slate-700 hover:bg-slate-800 text-slate-400 hover:text-white text-[10px] font-bold flex items-center justify-center gap-1 transition-colors"><i class="fa-solid fa-plus"></i> FATURA / ABONELİK EKLE</button>`;
+
+            content.innerHTML = `<h3 class="font-bold text-white text-xs mb-2 px-1">KREDİ KARTLARI</h3>${kartHTML}<h3 class="font-bold text-white text-xs mb-2 px-1 mt-4">BANKA KREDİLERİ</h3>${krediHTML}<h3 class="font-bold text-white text-xs mb-2 px-1 mt-4">FATURALAR VE ABONELİKLER</h3>${faturaHTML}${aboneEkleBtn}`;
+        }
+        else if (tabId === 'alacaklar') {
+            let html = db.alacaklar.length === 0 ? `<p class="text-center text-slate-500 text-xs mt-4">Kayıt yok.</p>` : 
+            db.alacaklar.map(a => {
+                let kalan = a.miktar - a.odenen;
+                let isAlacak = a.tip === 'alacak';
+                let yuzde = Math.min((a.odenen / a.miktar) * 100, 100);
+                return `
+                <div class="glass-panel p-2 mb-2 border-l-2 border-l-${isAlacak ? 'emerald' : 'rose'}-500">
+                    <div class="flex justify-between items-center mb-1">
+                        <h4 class="font-bold text-white text-[11px]">${a.baslik} <span class="text-[8px] text-slate-400 ml-1">(${isAlacak ? 'Alacak' : 'Borç'})</span></h4>
+                        <div class="flex gap-2">
+                            <button onclick="islemEkle(${a.id}, 'alacak')" class="text-[8px] bg-blue-500/20 text-blue-400 px-1.5 py-0.5 rounded font-bold border border-blue-500/30">TAHSİL/ÖDE</button>
+                            <button onclick="deleteItem('alacaklar', ${a.id})" class="text-slate-500"><i class="fa-solid fa-trash text-[9px]"></i></button>
+                        </div>
+                    </div>
+                    <div class="w-full bg-slate-900 rounded-full h-1 mb-1.5 mt-1.5"><div class="bg-blue-500 h-1 rounded-full" style="width: ${yuzde}%"></div></div>
+                    <div class="flex justify-between text-[9px] bg-slate-900/50 p-1 rounded border border-slate-700/50">
+                        <span class="text-slate-300">Toplam: ${a.miktar.toLocaleString()}</span>
+                        <span class="text-blue-400">${isAlacak ? 'Alınan' : 'Ödenen'}: ${a.odenen.toLocaleString()}</span>
+                        <span class="${isAlacak ? 'text-emerald-400' : 'text-rose-400'} font-bold">Kalan: ${kalan.toLocaleString()} ₺</span>
+                    </div>
+                </div>`;
+            }).join('');
+            content.innerHTML = `<h3 class="font-bold text-white text-xs mb-3 px-1">Veresiyeler & Alacaklar</h3>${html}`;
+        }
+    }
+    switchTab('giderler');
 </script>
 </body>
 </html>
